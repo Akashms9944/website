@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NEXUS — Creative Digital Agency</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ink:    #0a0a0f;
+      --paper:  #f4f0e8;
+      --rust:   #c84b2f;
+      --gold:   #d4a843;
+      --mist:   #c8c4bc;
+      --white:  #ffffff;
+      --ff-display: 'Bebas Neue', sans-serif;
+      --ff-serif:   'Playfair Display', serif;
+      --ff-body:    'DM Sans', sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--ff-body);
+      background: var(--ink);
+      color: var(--paper);
+      overflow-x: hidden;
+      cursor: none;
+    }
+    /* custom cursor */
+    #cursor {
+      position: fixed; top: 0; left: 0; z-index: 9999;
+      width: 14px; height: 14px;
+      background: var(--rust);
+      border-radius: 50%;
+      pointer-events: none;
+      transition: transform 0.12s ease, background 0.2s;
+      transform: translate(-50%, -50%);
+    }
+    #cursor-ring {
+      position: fixed; top: 0; left: 0; z-index: 9998;
+      width: 38px; height: 38px;
+      border: 1px solid var(--rust);
+      border-radius: 50%;
+      pointer-events: none;
+      transition: transform 0.28s ease;
+      transform: translate(-50%, -50%);
+      opacity: 0.5;
+    }
+    a, button { cursor: none; }
+
+    /* ─── NOISE OVERLAY ────────────────────────────── */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9990;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+    }
+
+    /* ─── SCROLLBAR ────────────────────────────────── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--rust); border-radius: 2px; }
+
+    /* ─── NAV ──────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 900;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 24px 60px;
+      mix-blend-mode: difference;
+    }
+    .nav-logo {
+      font-family: var(--ff-display);
+      font-size: 2rem;
+      letter-spacing: 0.1em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 40px; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 0;
+      width: 0; height: 1px;
+      background: var(--rust);
+      transition: width 0.35s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta {
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink);
+      background: var(--paper);
+      padding: 10px 24px;
+      text-decoration: none;
+      transition: background 0.25s, color 0.25s;
+    }
+    .nav-cta:hover { background: var(--rust); color: var(--white); }
+
+    /* ─── HERO ─────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 0 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 70% 40%, #1e0e08 0%, var(--ink) 70%);
+    }
+    .hero-bg-accent {
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(200,75,47,0.28) 0%, transparent 70%);
+      top: -100px; right: -100px;
+      animation: pulse-glow 6s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%,100% { transform: scale(1); opacity: 0.7; }
+      50% { transform: scale(1.12); opacity: 1; }
+    }
+    .hero-tag {
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 20px;
+      position: relative;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .hero-tag::before { content: ''; width: 40px; height: 1px; background: var(--rust); }
+    .hero-headline {
+      font-family: var(--ff-display);
+      font-size: clamp(5rem, 12vw, 14rem);
+      line-height: 0.88;
+      letter-spacing: 0.02em;
+      position: relative;
+    }
+    .hero-headline span { color: var(--rust); }
+    .hero-sub {
+      display: flex; align-items: flex-end; justify-content: space-between;
+      margin-top: 48px;
+      position: relative;
+    }
+    .hero-desc {
+      max-width: 380px;
+      font-weight: 300;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--mist);
+    }
+    .hero-scroll {
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--mist);
+    }
+    .hero-scroll-line {
+      width: 1px; height: 80px;
+      background: linear-gradient(to bottom, var(--rust), transparent);
+      animation: scroll-line 2s ease-in-out infinite;
+    }
+    @keyframes scroll-line {
+      0%,100% { transform: scaleY(1); opacity: 1; }
+      50% { transform: scaleY(0.5); opacity: 0.4; }
+    }
+    .hero-counter {
+      position: absolute; right: 0; bottom: 100px;
+      font-family: var(--ff-display);
+      font-size: 10rem;
+      color: rgba(255,255,255,0.03);
+      line-height: 1;
+      pointer-events: none;
+      select: none;
+    }
+
+    /* ─── MARQUEE ──────────────────────────────────── */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 18px 0;
+      background: var(--rust);
+    }
+    .marquee-track {
+      display: flex; gap: 60px;
+      white-space: nowrap;
+      animation: marquee 22s linear infinite;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+    .marquee-item {
+      font-family: var(--ff-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--white);
+    }
+    .marquee-dot { color: var(--ink); }
+
+    /* ─── SECTION GENERIC ──────────────────────────── */
+    section { padding: 120px 60px; position: relative; }
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--rust);
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 60px;
+    }
+    .section-label::before { content: ''; width: 30px; height: 1px; background: var(--rust); }
+    h2.display {
+      font-family: var(--ff-display);
+      font-size: clamp(3rem, 6vw, 7rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+    }
+
+    /* ─── ABOUT ────────────────────────────────────── */
+    #about { background: var(--paper); color: var(--ink); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .about-left h2 { margin-bottom: 32px; }
+    .about-left h2 em { font-family: var(--ff-serif); font-style: italic; color: var(--rust); }
+    .about-left p {
+      font-size: 1.05rem; line-height: 1.75;
+      color: #444; margin-bottom: 20px; font-weight: 300;
+    }
+    .about-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 40px; margin-top: 60px;
+    }
+    .stat-num {
+      font-family: var(--ff-display);
+      font-size: 4rem;
+      color: var(--rust);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #888; margin-top: 4px;
+    }
+    .about-right {
+      position: relative;
+    }
+    .about-img-box {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--ink);
+      position: relative; overflow: hidden;
+    }
+    .about-img-box::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, var(--rust) 0%, #7a1e0a 100%);
+      opacity: 0.85;
+    }
+    .about-img-text {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-display);
+      font-size: 8rem;
+      color: rgba(255,255,255,0.12);
+      letter-spacing: 0.1em;
+    }
+    .about-accent-box {
+      position: absolute;
+      bottom: -30px; right: -30px;
+      width: 180px; height: 180px;
+      border: 2px solid var(--rust);
+    }
+
+    /* ─── SERVICES ─────────────────────────────────── */
+    #services { background: var(--ink); }
+    .services-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 80px;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      background: rgba(255,255,255,0.06);
+    }
+    .service-card {
+      background: var(--ink);
+      padding: 50px 40px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: background 0.35s, border-color 0.35s;
+      position: relative; overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 100%; height: 2px;
+      background: var(--rust);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+    .service-card:hover::before { transform: scaleX(1); }
+    .service-card:hover { background: rgba(200,75,47,0.06); border-color: rgba(200,75,47,0.2); }
+    .service-num {
+      font-family: var(--ff-display);
+      font-size: 1rem;
+      color: var(--rust);
+      letter-spacing: 0.1em;
+      margin-bottom: 30px;
+    }
+    .service-icon {
+      width: 48px; height: 48px;
+      margin-bottom: 24px;
+      stroke: var(--paper); fill: none; stroke-width: 1.5;
+    }
+    .service-card h3 {
+      font-family: var(--ff-display);
+      font-size: 1.9rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+    .service-card p {
+      font-size: 0.9rem; line-height: 1.7;
+      color: var(--mist); font-weight: 300;
+    }
+    .service-tags {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      margin-top: 28px;
+    }
+    .tag {
+      font-size: 0.65rem; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 5px 12px;
+      color: var(--mist);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .service-card:hover .tag { border-color: var(--rust); color: var(--paper); }
+
+    /* ─── WORKS ────────────────────────────────────── */
+    #works { background: var(--paper); color: var(--ink); }
+    .works-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      margin-top: 60px;
+    }
+    .work-item {
+      position: relative; overflow: hidden;
+      aspect-ratio: 4/3;
+      background: var(--ink);
+    }
+    .work-item:first-child { grid-column: span 2; aspect-ratio: 21/9; }
+    .work-bg {
+      position: absolute; inset: 0;
+      transition: transform 0.6s ease;
+    }
+    .work-item:hover .work-bg { transform: scale(1.05); }
+    .work-bg-1 { background: linear-gradient(135deg, #1a0a28, #3d1a5c); }
+    .work-bg-2 { background: linear-gradient(135deg, #0a1a2e, #1a4a6e); }
+    .work-bg-3 { background: linear-gradient(135deg, #1a200a, #3a4a0a); }
+    .work-bg-4 { background: linear-gradient(135deg, #2e0a0a, #6e1a1a); }
+    .work-bg-5 { background: linear-gradient(135deg, #0a1e1e, #0a3a3a); }
+    .work-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+      transition: background 0.35s;
+    }
+    .work-item:hover .work-overlay { background: rgba(200,75,47,0.35); }
+    .work-cat {
+      font-size: 0.68rem; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 8px;
+    }
+    .work-title {
+      font-family: var(--ff-display);
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+      color: var(--white);
+    }
+    .work-arrow {
+      position: absolute; top: 30px; right: 30px;
+      width: 44px; height: 44px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.2rem;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .work-item:hover .work-arrow { opacity: 1; transform: translateY(0); }
+
+    /* ─── PROCESS ──────────────────────────────────── */
+    #process { background: var(--ink); }
+    .process-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 2px; margin-top: 80px;
+    }
+    .process-step {
+      padding: 48px 36px;
+      border: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+    }
+    .process-step::after {
+      content: attr(data-num);
+      position: absolute; top: 20px; right: 20px;
+      font-family: var(--ff-display);
+      font-size: 5rem;
+      color: rgba(255,255,255,0.03);
+      line-height: 1;
+    }
+    .step-dot {
+      width: 10px; height: 10px;
+      background: var(--rust);
+      border-radius: 50%;
+      margin-bottom: 32px;
+    }
+    .process-step h3 {
+      font-family: var(--ff-display);
+      font-size: 1.7rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+    .process-step p {
+      font-size: 0.88rem; line-height: 1.7;
+      color: var(--mist); font-weight: 300;
+    }
+
+    /* ─── TEAM ─────────────────────────────────────── */
+    #team { background: var(--paper); color: var(--ink); }
+    .team-grid {
+      display: grid; grid-template-columns: repeat(4,1fr);
+      gap: 30px; margin-top: 60px;
+    }
+    .team-card { position: relative; }
+    .team-photo {
+      width: 100%; aspect-ratio: 3/4;
+      background: var(--ink);
+      position: relative; overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .team-photo-inner {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-display);
+      font-size: 5rem;
+      color: rgba(255,255,255,0.12);
+    }
+    .team-photo-grad {
+      position: absolute; inset: 0;
+      transition: opacity 0.35s;
+    }
+    .tp1 { background: linear-gradient(160deg, #4a1a0a, #c84b2f88); }
+    .tp2 { background: linear-gradient(160deg, #0a2a4a, #2a6a9a88); }
+    .tp3 { background: linear-gradient(160deg, #1a3a0a, #4a8a2a88); }
+    .tp4 { background: linear-gradient(160deg, #2a0a3a, #6a2a9a88); }
+    .team-card:hover .team-photo-grad { opacity: 0.6; }
+    .team-name {
+      font-family: var(--ff-serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .team-role {
+      font-size: 0.72rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--rust);
+      margin-top: 4px;
+    }
+
+    /* ─── TESTIMONIALS ─────────────────────────────── */
+    #testimonials { background: var(--rust); color: var(--white); }
+    .testimonials-header { margin-bottom: 60px; }
+    .testimonials-track {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2px;
+    }
+    .testi-card {
+      background: rgba(0,0,0,0.2);
+      padding: 50px 40px;
+      position: relative;
+    }
+    .testi-quote {
+      font-family: var(--ff-display);
+      font-size: 5rem;
+      color: rgba(255,255,255,0.2);
+      line-height: 0.8;
+      margin-bottom: 20px;
+    }
+    .testi-text {
+      font-family: var(--ff-serif);
+      font-size: 1.1rem;
+      font-style: italic;
+      line-height: 1.7;
+      margin-bottom: 30px;
+    }
+    .testi-author { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .testi-company { font-size: 0.68rem; color: rgba(255,255,255,0.6); margin-top: 4px; }
+    .stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 20px; }
+
+    /* ─── PRICING ──────────────────────────────────── */
+    #pricing { background: var(--ink); }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 2px; margin-top: 60px;
+    }
+    .price-card {
+      padding: 60px 44px;
+      border: 1px solid rgba(255,255,255,0.07);
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .price-card.featured {
+      background: var(--rust);
+      border-color: var(--rust);
+    }
+    .price-card:not(.featured):hover { border-color: rgba(200,75,47,0.5); }
+    .price-tier {
+      font-size: 0.7rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--mist);
+      margin-bottom: 28px;
+    }
+    .price-card.featured .price-tier { color: rgba(255,255,255,0.7); }
+    .price-amount {
+      font-family: var(--ff-display);
+      font-size: 5rem;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .price-period { font-size: 0.8rem; color: var(--mist); margin-bottom: 40px; }
+    .price-card.featured .price-period { color: rgba(255,255,255,0.7); }
+    .price-features { list-style: none; margin-bottom: 44px; }
+    .price-features li {
+      font-size: 0.88rem; line-height: 1.6;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--mist);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .price-card.featured .price-features li { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.15); }
+    .price-features li::before { content: '✓'; color: var(--rust); font-size: 0.75rem; flex-shrink: 0; }
+    .price-card.featured .price-features li::before { color: var(--white); }
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      font-size: 0.75rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+    .btn-outline {
+      border: 1px solid rgba(255,255,255,0.3);
+      color: var(--paper);
+    }
+    .btn-outline:hover { background: var(--rust); border-color: var(--rust); color: white; }
+    .btn-solid {
+      background: var(--ink);
+      color: var(--white);
+    }
+    .btn-solid:hover { background: rgba(0,0,0,0.5); }
+    .badge-popular {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--gold);
+      color: var(--ink);
+      font-size: 0.62rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 5px 16px;
+      white-space: nowrap;
+    }
+
+    /* ─── FAQ ──────────────────────────────────────── */
+    #faq { background: var(--paper); color: var(--ink); }
+    .faq-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; margin-top: 60px; align-items: start;
+    }
+    .faq-item {
+      border-bottom: 1px solid rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 24px 0;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--ff-serif); font-size: 1.05rem; font-weight: 700;
+      cursor: none;
+      user-select: none;
+    }
+    .faq-icon {
+      width: 24px; height: 24px;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
+      transition: transform 0.3s, background 0.3s;
+    }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: var(--rust); color: white; border-color: var(--rust); }
+    .faq-a {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+      font-size: 0.9rem; line-height: 1.75; color: #555; font-weight: 300;
+    }
+    .faq-item.open .faq-a { max-height: 200px; }
+    .faq-a-inner { padding-bottom: 24px; }
+
+    /* ─── BLOG ─────────────────────────────────────── */
+    #blog { background: var(--ink); }
+    .blog-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 2px; margin-top: 60px;
+    }
+    .blog-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .blog-card:hover { border-color: rgba(200,75,47,0.4); }
+    .blog-thumb {
+      width: 100%; aspect-ratio: 16/9;
+      position: relative; overflow: hidden;
+    }
+    .blog-card:first-child .blog-thumb { aspect-ratio: 21/9; }
+    .blog-thumb-bg {
+      position: absolute; inset: 0;
+      transition: transform 0.5s ease;
+    }
+    .blog-card:hover .blog-thumb-bg { transform: scale(1.06); }
+    .bt1 { background: linear-gradient(160deg, #200a30, #6a1a9a); }
+    .bt2 { background: linear-gradient(160deg, #0a1a30, #1a4a8a); }
+    .bt3 { background: linear-gradient(160deg, #301000, #8a3000); }
+    .blog-body { padding: 30px; }
+    .blog-cat {
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--rust);
+      margin-bottom: 10px;
+    }
+    .blog-card h3 {
+      font-family: var(--ff-serif);
+      font-size: 1.15rem;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+    .blog-meta {
+      font-size: 0.72rem; color: var(--mist);
+      display: flex; gap: 16px;
+    }
+
+    /* ─── CONTACT ──────────────────────────────────── */
+    #contact {
+      background: var(--paper); color: var(--ink);
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 0;
+    }
+    .contact-left {
+      padding: 120px 60px;
+      background: var(--ink); color: var(--paper);
+    }
+    .contact-left h2 { color: var(--paper); margin-bottom: 30px; }
+    .contact-left p { color: var(--mist); line-height: 1.7; margin-bottom: 50px; }
+    .contact-info-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      margin-bottom: 28px;
+    }
+    .contact-info-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.06);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-info-label {
+      font-size: 0.65rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--rust);
+      margin-bottom: 4px;
+    }
+    .contact-info-value { font-size: 0.9rem; color: var(--mist); }
+    .contact-right { padding: 120px 60px; }
+    .contact-right h3 {
+      font-family: var(--ff-display);
+      font-size: 2.4rem;
+      margin-bottom: 40px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { margin-bottom: 24px; }
+    .form-group label {
+      display: block;
+      font-size: 0.68rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: #888;
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(0,0,0,0.2);
+      padding: 10px 0;
+      font-family: var(--ff-body);
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--rust); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .btn-submit {
+      background: var(--ink);
+      color: var(--white);
+      padding: 16px 48px;
+      font-size: 0.78rem; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: none;
+      cursor: none;
+      transition: background 0.25s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover { background: var(--rust); }
+
+    /* ─── FOOTER ───────────────────────────────────── */
+    footer {
+      background: #050508;
+      color: var(--mist);
+      padding: 80px 60px 40px;
+    }
+    .footer-top {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px; margin-bottom: 60px;
+    }
+    .footer-brand-logo {
+      font-family: var(--ff-display);
+      font-size: 2.8rem;
+      color: var(--white);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    .footer-tagline {
+      font-size: 0.88rem; line-height: 1.7;
+      color: #666; margin-bottom: 28px; font-weight: 300;
+    }
+    .footer-social { display: flex; gap: 14px; }
+    .social-link {
+      width: 36px; height: 36px;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--mist); text-decoration: none; font-size: 0.8rem;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .social-link:hover { border-color: var(--rust); color: var(--white); background: var(--rust); }
+    .footer-col h4 {
+      font-size: 0.68rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--white);
+      margin-bottom: 22px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 12px; }
+    .footer-col a {
+      font-size: 0.87rem; color: #666; text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: var(--rust); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 30px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: #444;
+    }
+
+    /* ─── ANIMATIONS ───────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 1024px) {
+      section { padding: 80px 30px; }
+      nav { padding: 20px 30px; }
+      #hero { padding: 0 30px 60px; }
+      .about-grid, .team-grid, .process-grid,
+      .blog-grid, .pricing-grid, .services-grid,
+      .testimonials-track { grid-template-columns: 1fr; }
+      .works-grid { grid-template-columns: 1fr; }
+      .work-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+      .faq-grid { grid-template-columns: 1fr; }
+      #contact { grid-template-columns: 1fr; }
+      .contact-left, .contact-right { padding: 60px 30px; }
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cursor -->
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <a href="#" class="nav-logo">NEXUS</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#works">Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#blog">Blog</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Start a Project</a>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-bg-accent"></div>
+    <div class="hero-counter">01</div>
+
+    <div class="hero-tag reveal">Digital Creative Studio</div>
+    <h1 class="hero-headline reveal reveal-delay-1">
+      WE BUILD<br><span>BOLD</span><br>FUTURES
+    </h1>
+    <div class="hero-sub reveal reveal-delay-2">
+      <p class="hero-desc">
+        NEXUS is an award-winning creative agency crafting unforgettable digital experiences — from brand identity to immersive web design and beyond.
+      </p>
+      <div class="hero-scroll">
+        <div class="hero-scroll-line"></div>
+        Scroll
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── MARQUEE ─── -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="marquee-item">Brand Strategy <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Web Design <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Motion Graphics <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">UI / UX Design <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">E-Commerce <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Digital Marketing <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Brand Strategy <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Web Design <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Motion Graphics <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">UI / UX Design <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">E-Commerce <span class="marquee-dot">✦</span></span>
+      <span class="marquee-item">Digital Marketing <span class="marquee-dot">✦</span></span>
+    </div>
+  </div>
+
+  <!-- ─── ABOUT ─── -->
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-left">
+        <div class="section-label reveal">Our Story</div>
+        <h2 class="display reveal reveal-delay-1">WE MAKE <em>IDEAS</em> MATTER</h2>
+        <p class="reveal reveal-delay-2">
+          Founded in 2015, NEXUS has grown from a two-person studio into a globally recognised creative powerhouse. We partner with brands at every stage — from audacious startups to Fortune 500 giants — helping them carve out unmistakable digital identities.
+        </p>
+        <p class="reveal reveal-delay-3">
+          Every project we take on is a chance to push boundaries, challenge conventions, and create something the world hasn't quite seen before. That's the NEXUS promise.
+        </p>
+        <div class="about-stats">
+          <div class="reveal reveal-delay-1">
+            <div class="stat-num">240+</div>
+            <div class="stat-label">Projects Delivered</div>
+          </div>
+          <div class="reveal reveal-delay-2">
+            <div class="stat-num">18</div>
+            <div class="stat-label">Global Awards</div>
+          </div>
+          <div class="reveal reveal-delay-3">
+            <div class="stat-num">9yr</div>
+            <div class="stat-label">In Business</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-right reveal reveal-delay-2">
+        <div class="about-img-box">
+          <div class="about-img-text">NX</div>
+        </div>
+        <div class="about-accent-box"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SERVICES ─── -->
+  <section id="services">
+    <div class="services-header">
+      <div>
+        <div class="section-label reveal">What We Do</div>
+        <h2 class="display reveal reveal-delay-1">OUR<br>SERVICES</h2>
+      </div>
+      <a href="#contact" class="btn btn-outline reveal reveal-delay-2">View All →</a>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <svg class="service-icon" viewBox="0 0 48 48"><circle cx="24" cy="24" r="18"/><path d="M24 6v36M6 24h36"/></svg>
+        <h3>Brand Identity</h3>
+        <p>We craft comprehensive brand systems — logos, guidelines, typography, and voice — that resonate deeply with your audience and stand the test of time.</p>
+        <div class="service-tags">
+          <span class="tag">Logo Design</span>
+          <span class="tag">Style Guides</span>
+          <span class="tag">Brand Voice</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">02</div>
+        <svg class="service-icon" viewBox="0 0 48 48"><rect x="4" y="8" width="40" height="32" rx="2"/><path d="M4 16h40"/><circle cx="10" cy="12" r="2"/><circle cx="17" cy="12" r="2"/></svg>
+        <h3>Web Design &amp; Dev</h3>
+        <p>From pixel-perfect Figma files to high-performance production code, we build websites that captivate visitors and convert them into loyal customers.</p>
+        <div class="service-tags">
+          <span class="tag">Figma</span>
+          <span class="tag">React</span>
+          <span class="tag">Webflow</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">03</div>
+        <svg class="service-icon" viewBox="0 0 48 48"><path d="M8 40L24 8l16 32"/><line x1="14" y1="28" x2="34" y2="28"/></svg>
+        <h3>Motion &amp; 3D</h3>
+        <p>Bringing brands to life through cinematic motion design, 3D visualisations, and interactive animations that leave lasting impressions.</p>
+        <div class="service-tags">
+          <span class="tag">After Effects</span>
+          <span class="tag">Blender</span>
+          <span class="tag">GSAP</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-3">
+        <div class="service-num">04</div>
+        <svg class="service-icon" viewBox="0 0 48 48"><path d="M6 36c0-8 8-16 18-16s18 8 18 16"/><circle cx="24" cy="14" r="8"/></svg>
+        <h3>UX Research</h3>
+        <p>Evidence-based design decisions grounded in real user research — interviews, usability tests, and data analysis that reduce risk and boost outcomes.</p>
+        <div class="service-tags">
+          <span class="tag">User Testing</span>
+          <span class="tag">Analytics</span>
+          <span class="tag">Journey Maps</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <div class="service-num">05</div>
+        <svg class="service-icon" viewBox="0 0 48 48"><rect x="6" y="6" width="36" height="36" rx="4"/><path d="M6 20h36M20 6v36"/></svg>
+        <h3>E-Commerce</h3>
+        <p>Conversion-optimised online stores built on Shopify, WooCommerce, or custom stacks — with UX strategies that maximise average order value.</p>
+        <div class="service-tags">
+          <span class="tag">Shopify</span>
+          <span class="tag">WooCommerce</span>
+          <span class="tag">CRO</span>
+        </div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <div class="service-num">06</div>
+        <svg class="service-icon" viewBox="0 0 48 48"><path d="M24 4l6 14h14l-11 8 4 14-13-9-13 9 4-14L4 18h14z"/></svg>
+        <h3>Digital Marketing</h3>
+        <p>Full-funnel digital strategies — SEO, paid media, content marketing, and social — engineered to drive measurable growth at every stage.</p>
+        <div class="service-tags">
+          <span class="tag">SEO</span>
+          <span class="tag">Paid Ads</span>
+          <span class="tag">Content</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── WORKS ─── -->
+  <section id="works">
+    <div class="section-label reveal">Portfolio</div>
+    <h2 class="display reveal reveal-delay-1">SELECTED<br>WORKS</h2>
+    <div class="works-grid">
+      <div class="work-item">
+        <div class="work-bg work-bg-1"></div>
+        <div class="work-overlay">
+          <div class="work-cat">Brand Identity · Web</div>
+          <div class="work-title">LUMINA Cosmetics Rebrand</div>
+        </div>
+        <div class="work-arrow">→</div>
+      </div>
+      <div class="work-item">
+        <div class="work-bg work-bg-2"></div>
+        <div class="work-overlay">
+          <div class="work-cat">Web Design · Development</div>
+          <div class="work-title">Orion Finance Platform</div>
+        </div>
+        <div class="work-arrow">→</div>
+      </div>
+      <div class="work-item">
+        <div class="work-bg work-bg-3"></div>
+        <div class="work-overlay">
+          <div class="work-cat">E-Commerce · Motion</div>
+          <div class="work-title">Verdant Organic Store</div>
+        </div>
+        <div class="work-arrow">→</div>
+      </div>
+      <div class="work-item">
+        <div class="work-bg work-bg-4"></div>
+        <div class="work-overlay">
+          <div class="work-cat">UX Research · Product</div>
+          <div class="work-title">Apex SaaS Dashboard</div>
+        </div>
+        <div class="work-arrow">→</div>
+      </div>
+      <div class="work-item">
+        <div class="work-bg work-bg-5"></div>
+        <div class="work-overlay">
+          <div class="work-cat">3D · Motion Graphics</div>
+          <div class="work-title">Tidal Music Campaign</div>
+        </div>
+        <div class="work-arrow">→</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PROCESS ─── -->
+  <section id="process">
+    <div class="section-label reveal">How We Work</div>
+    <h2 class="display reveal reveal-delay-1">OUR<br>PROCESS</h2>
+    <div class="process-grid">
+      <div class="process-step reveal" data-num="01">
+        <div class="step-dot"></div>
+        <h3>Discovery</h3>
+        <p>We deep-dive into your business, audience, and competitive landscape — asking the uncomfortable questions that reveal the real opportunity.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-1" data-num="02">
+        <div class="step-dot"></div>
+        <h3>Strategy</h3>
+        <p>Every creative decision is anchored in a clear strategic framework — positioning, messaging architecture, and a visual language system.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-2" data-num="03">
+        <div class="step-dot"></div>
+        <h3>Creation</h3>
+        <p>Our multidisciplinary team brings the strategy to life with meticulous craft — iterating rapidly through concepts to the perfect execution.</p>
+      </div>
+      <div class="process-step reveal reveal-delay-3" data-num="04">
+        <div class="step-dot"></div>
+        <h3>Launch &amp; Grow</h3>
+        <p>We don't disappear at launch. Our growth team monitors performance and continuously optimises to compound your returns over time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TEAM ─── -->
+  <section id="team">
+    <div class="section-label reveal">The People</div>
+    <h2 class="display reveal reveal-delay-1">MEET THE<br>TEAM</h2>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-photo">
+          <div class="team-photo-grad tp1"></div>
+          <div class="team-photo-inner">RK</div>
+        </div>
+        <div class="team-name">Riya Kapoor</div>
+        <div class="team-role">Creative Director</div>
+      </div>
+      <div class="team-card reveal reveal-delay-1">
+        <div class="team-photo">
+          <div class="team-photo-grad tp2"></div>
+          <div class="team-photo-inner">JM</div>
+        </div>
+        <div class="team-name">James Moreau</div>
+        <div class="team-role">Lead Developer</div>
+      </div>
+      <div class="team-card reveal reveal-delay-2">
+        <div class="team-photo">
+          <div class="team-photo-grad tp3"></div>
+          <div class="team-photo-inner">AL</div>
+        </div>
+        <div class="team-name">Aiko Lim</div>
+        <div class="team-role">UX Strategist</div>
+      </div>
+      <div class="team-card reveal reveal-delay-3">
+        <div class="team-photo">
+          <div class="team-photo-grad tp4"></div>
+          <div class="team-photo-inner">DO</div>
+        </div>
+        <div class="team-name">Darius Osei</div>
+        <div class="team-role">Motion Designer</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─── -->
+  <section id="testimonials">
+    <div class="testimonials-header">
+      <div class="section-label reveal" style="color:rgba(255,255,255,0.6)">Client Love</div>
+      <h2 class="display reveal reveal-delay-1" style="color:white">WHAT THEY<br>SAY</h2>
+    </div>
+    <div class="testimonials-track">
+      <div class="testi-card reveal">
+        <div class="stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">NEXUS completely transformed how our customers perceive us. The rebrand was bold, cohesive, and absolutely on brief — they exceeded every expectation.</p>
+        <div class="testi-author">Sophie Marchetti</div>
+        <div class="testi-company">CMO, LUMINA Cosmetics</div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Working with NEXUS felt like having a brilliant in-house team. Their strategic thinking and attention to detail is second to none in this industry.</p>
+        <div class="testi-author">Marcus Chen</div>
+        <div class="testi-company">CEO, Orion Capital</div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="stars">★★★★★</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Our new Shopify store launched to a 340% increase in conversion rate. The team's understanding of user psychology is genuinely impressive.</p>
+        <div class="testi-author">Priya Nair</div>
+        <div class="testi-company">Founder, Verdant</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── PRICING ─── -->
+  <section id="pricing">
+    <div class="section-label reveal">Investment</div>
+    <h2 class="display reveal reveal-delay-1">SIMPLE<br>PRICING</h2>
+    <div class="pricing-grid">
+      <div class="price-card reveal">
+        <div class="price-tier">Starter</div>
+        <div class="price-amount">$4,800</div>
+        <div class="price-period">One-time project</div>
+        <ul class="price-features">
+          <li>Brand identity system</li>
+          <li>5-page website design</li>
+          <li>2 rounds of revisions</li>
+          <li>Source files included</li>
+          <li>30-day support</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Get Started</a>
+      </div>
+      <div class="price-card featured reveal reveal-delay-1">
+        <div class="badge-popular">Most Popular</div>
+        <div class="price-tier">Growth</div>
+        <div class="price-amount">$12,500</div>
+        <div class="price-period">Per project</div>
+        <ul class="price-features">
+          <li>Full brand system</li>
+          <li>10-page custom website</li>
+          <li>Motion &amp; micro-interactions</li>
+          <li>SEO foundation setup</li>
+          <li>4 rounds of revisions</li>
+          <li>90-day priority support</li>
+        </ul>
+        <a href="#contact" class="btn btn-solid">Get Started</a>
+      </div>
+      <div class="price-card reveal reveal-delay-2">
+        <div class="price-tier">Enterprise</div>
+        <div class="price-amount">Custom</div>
+        <div class="price-period">Ongoing retainer</div>
+        <ul class="price-features">
+          <li>Dedicated team</li>
+          <li>Unlimited projects</li>
+          <li>Full digital marketing</li>
+          <li>Monthly strategy sessions</li>
+          <li>24/7 premium support</li>
+          <li>SLA guarantee</li>
+        </ul>
+        <a href="#contact" class="btn btn-outline">Talk to Sales</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FAQ ─── -->
+  <section id="faq">
+    <div class="section-label reveal">FAQ</div>
+    <h2 class="display reveal reveal-delay-1">COMMON<br>QUESTIONS</h2>
+    <div class="faq-grid">
+      <div>
+        <div class="faq-item reveal">
+          <div class="faq-q">How long does a typical project take? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Most brand identity projects take 4–6 weeks. Full website builds range from 6–12 weeks depending on complexity. We'll give you a precise timeline during the discovery phase.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-1">
+          <div class="faq-q">Do you work with startups? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Absolutely. We love working with ambitious startups and often offer flexible payment structures for early-stage companies with big visions.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-2">
+          <div class="faq-q">What information do you need to get started? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">A brief overview of your business, target audience, goals, and budget is enough to kick off a discovery call. We handle the rest from there.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-3">
+          <div class="faq-q">Can you work with our existing brand? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Yes — we offer brand evolution services where we refine and modernise existing identities rather than starting from scratch.</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="faq-item reveal">
+          <div class="faq-q">Do you offer ongoing support? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Yes. All projects include a support period, and we offer monthly retainer packages for ongoing design, development, and marketing needs.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-1">
+          <div class="faq-q">Who owns the final deliverables? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">You do. Upon final payment, all intellectual property, source files, and assets transfer entirely to you.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-2">
+          <div class="faq-q">How do revisions work? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">Each package includes a set number of revision rounds. We present our work in structured sessions and gather consolidated feedback to keep projects on track.</div></div>
+        </div>
+        <div class="faq-item reveal reveal-delay-3">
+          <div class="faq-q">Are you remote-only? <span class="faq-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">We're remote-first with team members across multiple time zones, but we can arrange in-person workshops for local clients and enterprise projects.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── BLOG ─── -->
+  <section id="blog">
+    <div class="section-label reveal">Insights</div>
+    <h2 class="display reveal reveal-delay-1">LATEST<br>ARTICLES</h2>
+    <div class="blog-grid">
+      <div class="blog-card reveal">
+        <div class="blog-thumb"><div class="blog-thumb-bg bt1"></div></div>
+        <div class="blog-body">
+          <div class="blog-cat">Brand Strategy</div>
+          <h3>Why Your Brand Needs a Clear Point of View in 2026</h3>
+          <div class="blog-meta"><span>June 2, 2026</span><span>8 min read</span></div>
+        </div>
+      </div>
+      <div class="blog-card reveal reveal-delay-1">
+        <div class="blog-thumb"><div class="blog-thumb-bg bt2"></div></div>
+        <div class="blog-body">
+          <div class="blog-cat">Web Design</div>
+          <h3>The Rise of Editorial Web Design</h3>
+          <div class="blog-meta"><span>May 20, 2026</span><span>5 min read</span></div>
+        </div>
+      </div>
+      <div class="blog-card reveal reveal-delay-2">
+        <div class="blog-thumb"><div class="blog-thumb-bg bt3"></div></div>
+        <div class="blog-body">
+          <div class="blog-cat">Motion</div>
+          <h3>How Micro-Interactions Drive Conversions</h3>
+          <div class="blog-meta"><span>May 8, 2026</span><span>6 min read</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CONTACT ─── -->
+  <section id="contact">
+    <div class="contact-left">
+      <div class="section-label reveal" style="color:var(--rust)">Let's Talk</div>
+      <h2 class="display reveal reveal-delay-1">START A<br>PROJECT</h2>
+      <p class="reveal reveal-delay-2">
+        Ready to build something extraordinary? We'd love to hear about your project. Send us a message or reach out directly — we respond within 24 hours.
+      </p>
+      <div class="contact-info-item reveal reveal-delay-2">
+        <div class="contact-info-icon">✉</div>
+        <div>
+          <div class="contact-info-label">Email</div>
+          <div class="contact-info-value">hello@nexusstudio.co</div>
+        </div>
+      </div>
+      <div class="contact-info-item reveal reveal-delay-3">
+        <div class="contact-info-icon">☎</div>
+        <div>
+          <div class="contact-info-label">Phone</div>
+          <div class="contact-info-value">+1 (415) 892-3047</div>
+        </div>
+      </div>
+      <div class="contact-info-item reveal reveal-delay-3">
+        <div class="contact-info-icon">◎</div>
+        <div>
+          <div class="contact-info-label">Location</div>
+          <div class="contact-info-value">San Francisco, CA · London, UK</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-right">
+      <h3 class="reveal">Send Us a Message</h3>
+      <div class="form-row">
+        <div class="form-group reveal"><label>First Name</label><input type="text" placeholder="Jane" /></div>
+        <div class="form-group reveal reveal-delay-1"><label>Last Name</label><input type="text" placeholder="Smith" /></div>
+      </div>
+      <div class="form-group reveal reveal-delay-1"><label>Email Address</label><input type="email" placeholder="jane@company.com" /></div>
+      <div class="form-group reveal reveal-delay-2"><label>Company</label><input type="text" placeholder="Your Company" /></div>
+      <div class="form-group reveal reveal-delay-2">
+        <label>Service Interest</label>
+        <select>
+          <option>Brand Identity</option>
+          <option>Web Design &amp; Development</option>
+          <option>Motion &amp; 3D</option>
+          <option>E-Commerce</option>
+          <option>Digital Marketing</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group reveal reveal-delay-3"><label>Project Brief</label><textarea placeholder="Tell us about your project, timeline, and budget…"></textarea></div>
+      <button class="btn-submit reveal reveal-delay-3" onclick="alert('Thank you! We\'ll be in touch within 24 hours.')">Send Message →</button>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-logo">NEXUS</div>
+        <p class="footer-tagline">A creative studio obsessed with building brands and digital experiences that genuinely move people.</p>
+        <div class="footer-social">
+          <a href="#" class="social-link">in</a>
+          <a href="#" class="social-link">tw</a>
+          <a href="#" class="social-link">be</a>
+          <a href="#" class="social-link">ig</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Brand Identity</a></li>
+          <li><a href="#">Web Design</a></li>
+          <li><a href="#">Motion &amp; 3D</a></li>
+          <li><a href="#">UX Research</a></li>
+          <li><a href="#">E-Commerce</a></li>
+          <li><a href="#">Digital Marketing</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Portfolio</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Press Kit</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NEXUS Studio. All rights reserved.</span>
+      <span>Crafted with ♥ &amp; obsession</span>
+    </div>
+  </footer>
+
+  <script>
+    /* ─── CURSOR ─── */
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top  = e.clientY + 'px';
+      ring.style.left   = e.clientX + 'px';
+      ring.style.top    = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(2.5)';
+        ring.style.transform   = 'translate(-50%,-50%) scale(1.4)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform   = 'translate(-50%,-50%) scale(1)';
+      });
+    });
+
+    /* ─── SCROLL REVEAL ─── */
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ─── FAQ ─── */
+    document.querySelectorAll('.faq-q').forEach(q => {
+      q.addEventListener('click', () => {
+        const item = q.parentElement;
+        item.classList.toggle('open');
+      });
+    });
+
+    /* ─── NAV SCROLL BLEND ─── */
+    const nav = document.querySelector('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.mixBlendMode = window.scrollY > 80 ? 'normal' : 'difference';
+    });
+  </script>
+</body>
+</html>
