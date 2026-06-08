@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMIÈRE — Fashion & Clothing</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-logo">LUMIÈRE</div>
+    <ul class="nav-links">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#collection">Collection</a></li>
+      <li><a href="#featured">Featured</a></li>
+      <li><a href="#lookbook">Lookbook</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <div class="nav-icons">
+      <i class="fa-regular fa-heart"></i>
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span class="cart-count">0</span>
+    </div>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-bg">
+      <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1400&auto=format&fit=crop&q=80" alt="Hero Fashion" class="hero-img" />
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-sub">New Season 2026</p>
+      <h1 class="hero-title">Wear Your<br/><em>Story</em></h1>
+      <p class="hero-desc">Elevated essentials for the modern wardrobe. Curated with intention, worn with ease.</p>
+      <div class="hero-buttons">
+        <a href="#collection" class="btn btn-dark">Shop Now</a>
+        <a href="#lookbook" class="btn btn-outline">View Lookbook</a>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <span>SS</span>
+      <span>2026</span>
+    </div>
+  </section>
+
+  <!-- MARQUEE STRIP -->
+  <div class="marquee-strip">
+    <div class="marquee-track">
+      <span>NEW ARRIVALS &nbsp;·&nbsp; FREE SHIPPING OVER ₹999 &nbsp;·&nbsp; SUSTAINABLE FASHION &nbsp;·&nbsp; EXCLUSIVE DESIGNS &nbsp;·&nbsp; NEW ARRIVALS &nbsp;·&nbsp; FREE SHIPPING OVER ₹999 &nbsp;·&nbsp; SUSTAINABLE FASHION &nbsp;·&nbsp; EXCLUSIVE DESIGNS &nbsp;·&nbsp;</span>
+    </div>
+  </div>
+
+  <!-- CATEGORIES -->
+  <section class="categories" id="collection">
+    <div class="section-header">
+      <p class="section-label">Browse by</p>
+      <h2 class="section-title">Shop Categories</h2>
+    </div>
+    <div class="cat-grid">
+      <div class="cat-card cat-large">
+        <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=800&auto=format&fit=crop&q=80" alt="Women" />
+        <div class="cat-info">
+          <h3>Women</h3>
+          <a href="#" class="cat-link">Explore <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1617137968427-85924c800a22?w=600&auto=format&fit=crop&q=80" alt="Men" />
+        <div class="cat-info">
+          <h3>Men</h3>
+          <a href="#" class="cat-link">Explore <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="cat-card">
+        <img src="https://images.unsplash.com/photo-1600950207944-0d63e8edbc3f?w=600&auto=format&fit=crop&q=80" alt="Accessories" />
+        <div class="cat-info">
+          <h3>Accessories</h3>
+          <a href="#" class="cat-link">Explore <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="products" id="featured">
+    <div class="section-header">
+      <p class="section-label">Hand-picked</p>
+      <h2 class="section-title">Featured Pieces</h2>
+    </div>
+    <div class="product-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="women">Women</button>
+      <button class="filter-btn" data-filter="men">Men</button>
+      <button class="filter-btn" data-filter="accessories">Accessories</button>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- Products injected by JS -->
+    </div>
+  </section>
+
+  <!-- LOOKBOOK BANNER -->
+  <section class="lookbook" id="lookbook">
+    <div class="lookbook-left">
+      <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=700&auto=format&fit=crop&q=80" alt="Lookbook 1" />
+    </div>
+    <div class="lookbook-center">
+      <p class="section-label">2026 Collection</p>
+      <h2>The Art of <em>Dressing Well</em></h2>
+      <p>Discover our carefully curated lookbook — where every outfit tells a unique story of elegance, confidence, and self-expression.</p>
+      <a href="#" class="btn btn-dark">View Full Lookbook</a>
+    </div>
+    <div class="lookbook-right">
+      <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&auto=format&fit=crop&q=80" alt="Lookbook 2" />
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="section-header">
+      <p class="section-label">What they say</p>
+      <h2 class="section-title">Customer Love</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"Absolutely in love with the quality. The fabric feels luxurious and the fit is perfect. LUMIÈRE has become my go-to brand."</p>
+        <div class="testi-author">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&auto=format&fit=crop&q=80" alt="Priya" />
+          <span>Priya S., Chennai</span>
+        </div>
+      </div>
+      <div class="testi-card testi-featured">
+        <div class="stars">★★★★★</div>
+        <p>"Every piece I've ordered has been stunning. Fast delivery, beautiful packaging, and timeless style. 10/10 would recommend!"</p>
+        <div class="testi-author">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&auto=format&fit=crop&q=80" alt="Ananya" />
+          <span>Ananya R., Mumbai</span>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"The most stylish and comfortable clothing I've worn. The attention to detail in every garment is remarkable."</p>
+        <div class="testi-author">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80" alt="Rohan" />
+          <span>Rohan M., Delhi</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <div class="newsletter-inner">
+      <p class="section-label">Stay in the loop</p>
+      <h2>Join the LUMIÈRE Circle</h2>
+      <p>Be the first to know about new arrivals, exclusive offers, and style inspiration.</p>
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input type="email" placeholder="Enter your email address" required />
+        <button type="submit" class="btn btn-dark">Subscribe</button>
+      </form>
+      <p class="newsletter-note">No spam. Unsubscribe anytime.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contact">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-logo">LUMIÈRE</div>
+        <p>Crafting elevated fashion for the modern soul. Sustainable. Stylish. Timeless.</p>
+        <div class="social-icons">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-pinterest"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#">Women's Collection</a></li>
+          <li><a href="#">Men's Collection</a></li>
+          <li><a href="#">Accessories</a></li>
+          <li><a href="#">New Arrivals</a></li>
+          <li><a href="#">Sale</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Help</h4>
+        <ul>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">FAQs</a></li>
+          <li><a href="#">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><i class="fa-solid fa-location-dot"></i> Chennai, Tamil Nadu, India</li>
+          <li><i class="fa-solid fa-phone"></i> +91 98765 43210</li>
+          <li><i class="fa-solid fa-envelope"></i> hello@lumiere.in</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 LUMIÈRE Fashion. All rights reserved.</p>
+      <p>Privacy Policy · Terms & Conditions</p>
+    </div>
+  </footer>
+
+  <!-- CART MODAL -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-panel">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button onclick="closeCart()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="cart-items" id="cartItems">
+        <p class="cart-empty">Your cart is empty.</p>
+      </div>
+      <div class="cart-footer">
+        <div class="cart-total">Total: <span id="cartTotal">₹0</span></div>
+        <button class="btn btn-dark" style="width:100%">Checkout</button>
+      </div>
+    </div>
+  </div>
+  <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
